@@ -48,7 +48,7 @@ resource "aws_instance" "terraform_ansible_server" {
   }
 
   provisioner "remote-exec" {
-    inline = "sudo mkdir -p /home/ansible && sudo chown ec2-user: /home/ansible"
+    inline = ["sudo mkdir -p /home/ansible && sudo chown ec2-user: /home/ansible"]
   }
 
   provisioner "file" {
