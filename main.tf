@@ -41,15 +41,19 @@ resource "aws_instance" "terraform_ansible_server" {
   }
 
   connection {
-    type     = "ssh"
-    user     = "ec2-user"
+    type        = "ssh"
+    user        = "ec2-user"
     private_key = tls_private_key.oskey.private_key_pem
-    host     = self.public_ip
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = "sudo mkdir -p /home/ansible && sudo chown ec2-user: /home/ansible"
   }
 
   provisioner "file" {
     source      = "./ansible/inventory.yaml"
-    destination = "chmod +x /home/inventory.yaml"
+    destination = "/home/ansible/inventory.yaml"
   }
 
   provisioner "file" {
