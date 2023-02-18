@@ -12,20 +12,20 @@
 #   public_key = tls_private_key.oskey.public_key_openssh
 # }
 
-data "hcp_packer_iteration" "ubuntu" {
+data "hcp_packer_iteration" "amz_linux" {
   bucket_name = var.hcp_bucket
   channel     = var.hcp_channel
 }
 
-data "hcp_packer_image" "ubuntu-focal-southeast" {
+data "hcp_packer_image" "ami-southeast" {
   bucket_name    = var.hcp_bucket
   cloud_provider = "aws"
-  iteration_id   = data.hcp_packer_iteration.ubuntu.ulid
+  iteration_id   = data.hcp_packer_iteration.amz_linux.ulid
   region         = var.region
 }
 
 resource "aws_instance" "terraform_ansible_server" {
-  ami                    = data.hcp_packer_image.ubuntu-focal-southeast.cloud_image_id
+  ami                    = data.hcp_packer_image.ami-southeast.cloud_image_id
   instance_type          = var.instance_type
   availability_zone      = var.availability_zones
   vpc_security_group_ids = [aws_security_group.tfc_ansible_sg.id]
