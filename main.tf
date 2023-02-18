@@ -63,7 +63,7 @@ resource "aws_instance" "terraform_ansible_server" {
 
   provisioner "file" {
     source      = "./ssm-agent-install.sh"
-    destination = "/home/ssm-agent-install.sh"
+    destination = "/home/ansible/ssm-agent-install.sh"
   }
 
   provisioner "file" {
