@@ -83,7 +83,7 @@ resource "aws_instance" "terraform_ansible_server" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /home/ansible/install.sh",
-      "/home/ansible/install.sh",
+      "sudo /home/ansible/install.sh",
     ]
   }
 
