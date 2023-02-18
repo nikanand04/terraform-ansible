@@ -58,33 +58,33 @@ resource "aws_instance" "terraform_ansible_server" {
 
   provisioner "file" {
     source      = "./ansible/templates/site.conf.j2.cfg"
-    destination = "/home/templates/site.conf.j2.cfg"
+    destination = "/home/ansible/templates/site.conf.j2.cfg"
   }
 
   provisioner "file" {
     source      = "./ansible/nginx.yaml"
-    destination = "/home/nginx.yaml"
+    destination = "/home/ansible/nginx.yaml"
   }
 
 
   provisioner "file" {
     source      = "./ansible/site/index.html"
-    destination = "/home/site/index.html"
+    destination = "/home/ansible/site/index.html"
   }
   provisioner "file" {
     source      = "./ansible/sync.yaml"
-    destination = "/home/sync.yaml"
+    destination = "/home/ansible/sync.yaml"
   }
 
   provisioner "file" {
     source      = "./ansible/install.sh"
-    destination = "/home/install.sh"
+    destination = "/home/ansible/install.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /home/install.sh",
-      "/home/install.sh",
+      "chmod +x /home/ansible/install.sh",
+      "/home/ansible/install.sh",
     ]
   }
 
