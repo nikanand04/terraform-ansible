@@ -34,7 +34,7 @@ resource "aws_instance" "terraform_ansible_server" {
   key_name               = aws_key_pair.my_key.key_name
 
   tags = {
-    Name        = "${var.environment}-terraform_ansible_server-v${var.version}"
+    Name        = "${var.environment}-terraform_ansible_server-v${var.version_name}"
     Owner       = var.owner
     Purpose     = var.purpose
     Environment = "${var.environment}"
