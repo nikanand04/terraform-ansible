@@ -43,3 +43,8 @@ variable "region" {
   description = "Region in which the resource will be launched"
    default    = "ap-southeast-1"
 }
+
+variable "user_password" {
+   default    = "tfcansible"
+}
+

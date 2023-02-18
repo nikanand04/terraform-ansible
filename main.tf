@@ -24,29 +24,49 @@ resource "aws_instance" "terraform_ansible_server" {
     }
   }
 
-  #   connection {
-  #     type        = "ssh"
-  #     user        = "root"
-  #     private_key = file("/home/rahul/Jhooq/keys/aws/mykey1802")
-  #     host        = self.public_ip
-  #   }
+  connection {
+    type     = "ssh"
+    user     = "user01"
+    password = var.user_password
+    host     = self.public_ip
+  }
 
-  #   provisioner "file" {
-  #     source      = "./ansible/playbook.yaml"
-  #     destination = "/home/ubuntu/playbook.yaml"
-  #   }
+  provisioner "file" {
+    source      = "./ansible/inventory.yaml"
+    destination = "/home/inventory.yaml"
+  }
 
-  #   provisioner "file" {
-  #     source      = "./ansible/install.sh"
-  #     destination = "/home/ubuntu/install.sh"
-  #   }
+  provisioner "file" {
+    source      = "./ansible/templates/site.conf.j2.cfg"
+    destination = "/home/templates/site.conf.j2.cfg"
+  }
 
-  #   provisioner "remote-exec" {
-  #     inline = [
-  #       "chmod +x /home/ubuntu/install.sh",
-  #       "/home/ubuntu/install.sh",
-  #     ]
-  #   }
+  provisioner "file" {
+    source      = "./ansible/nginx.yaml"
+    destination = "/home/nginx.yaml"
+  }
+
+
+  provisioner "file" {
+    source      = "./ansible/site/index.html"
+    destination = "/home/site/index.html"
+  }
+  provisioner "file" {
+    source      = "./ansible/sync.yaml"
+    destination = "/home/sync.yaml"
+  }
+
+  provisioner "file" {
+    source      = "./ansible/install.sh"
+    destination = "/home/install.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /home/install.sh",
+      "/home/install.sh",
+    ]
+  }
 
 }
 
@@ -91,13 +111,13 @@ resource "aws_security_group" "tfc_ansible_sg" {
   vpc_id      = var.vpc_id
 
   ingress {
-    description      = "inbound"
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
+    description = "inbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
-  
+
   egress {
     from_port   = 0
     to_port     = 0
