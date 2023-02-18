@@ -49,7 +49,7 @@ resource "aws_instance" "terraform_ansible_server" {
 
   provisioner "file" {
     source      = "./ansible/inventory.yaml"
-    destination = "/home/inventory.yaml"
+    destination = "chmod +x /home/inventory.yaml"
   }
 
   provisioner "file" {
