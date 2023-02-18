@@ -113,6 +113,11 @@ provisioner "file" {
   destination = "/home/ansible_terraform/install.sh"
 }
 
+provisioner "file" {
+  source      = "./ansible/instance.sh"
+  destination = "/home/ansible_terraform/instance.sh"
+}
+
   #command to run ansible playbook on remote Linux OS
   provisioner "remote-exec" {
 
