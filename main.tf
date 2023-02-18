@@ -6,7 +6,6 @@ resource "aws_instance" "terraform_ansible_server" {
   vpc_security_group_ids = [aws_security_group.tfc_ansible_sg.id]
   subnet_id              = var.subnet_id
   iam_instance_profile   = aws_iam_instance_profile.iam-profile.name
-  key_name               = "mykey1802"
 
   tags = {
     Name        = "${var.environment}-terraform_ansible_server"
