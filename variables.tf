@@ -54,8 +54,8 @@ variable "hcp_channel" {
   default = "staging"
 }
 
-variable "version_name" {
-  type    = string
-  default = "1.0.0"
-}
+# variable "version_name" {
+#   type    = string
+#   default = "1.0.0"
+# }
 
