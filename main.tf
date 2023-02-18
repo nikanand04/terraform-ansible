@@ -51,7 +51,7 @@ resource "aws_instance" "terraform_ansible_server" {
 }
 
 resource "aws_ebs_volume" "ebs" {
-  availability_zone = aws_instance.os1.availability_zone
+  availability_zone = aws_instance.terraform_ansible_server.availability_zone
   size              = 1
   tags = {
     Name        = "${var.environment}-terraform_ansible_ebs"
@@ -79,7 +79,7 @@ resource "null_resource" "nullremote1" {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.oskey.private_key_pem
-    host        = self.public_ip
+    host        = aws_instance.terraform_ansible_server.public_ip
   }
 
   provisioner "remote-exec" {
