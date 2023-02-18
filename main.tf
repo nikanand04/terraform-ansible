@@ -100,7 +100,7 @@ resource "null_resource" "nullremote2" {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.oskey.private_key_pem
-    host        = self.public_ip
+    host        = aws_instance.terraform_ansible_server.public_ip
   }
 
   provisioner "file" {
