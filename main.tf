@@ -114,8 +114,8 @@ provisioner "file" {
 }
 
 provisioner "file" {
-  source      = "./ansible/instance.sh"
-  destination = "/home/ansible_terraform/instance.sh"
+  source      = "./ansible/instance.yaml"
+  destination = "/home/ansible_terraform/instance.yaml"
 }
 
   #command to run ansible playbook on remote Linux OS
