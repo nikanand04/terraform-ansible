@@ -53,9 +53,3 @@ variable "hcp_channel" {
   description = "HCP Packer channel name"
   default = "staging"
 }
-
-variable "version_name" {
-  type    = string
-  default = "1.0.0"
-}
-
