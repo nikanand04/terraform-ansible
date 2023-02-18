@@ -40,16 +40,41 @@ resource "aws_instance" "terraform_ansible_server" {
     Environment = "${var.environment}"
   }
 
-  root_block_device {
-    delete_on_termination = true
-    tags = {
-      Name        = "${var.environment}-terraform_ansible_ebs"
-      Owner       = var.owner
-      Purpose     = var.purpose
-      Environment = "${var.environment}"
-    }
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /home/ssm-agent-install.sh",
+      "sudo /home/ssm-agent-install.sh",
+      "chmod +x /home/ansible/install.sh",
+      "sudo /home/ansible/install.sh"
+    ]
   }
+}
 
+resource "aws_ebs_volume" "ebs" {
+  availability_zone = aws_instance.os1.availability_zone
+  size              = 1
+  tags = {
+    Name        = "${var.environment}-terraform_ansible_ebs"
+    Owner       = var.owner
+    Purpose     = var.purpose
+    Environment = "${var.environment}"
+  }
+}
+
+resource "aws_volume_attachment" "ebs_att" {
+  device_name  = "/dev/sdh"
+  volume_id    = aws_ebs_volume.ebs.id
+  instance_id  = aws_instance.terraform_ansible_server.id
+  force_detach = true
+}
+
+output "op2" {
+  value = aws_volume_attachment.ebs_att.device_name
+}
+
+#connecting to the Ansible control node using SSH connection
+resource "null_resource" "nullremote1" {
+  depends_on = [aws_instance.terraform_ansible_server]
   connection {
     type        = "ssh"
     user        = "ubuntu"
@@ -58,50 +83,44 @@ resource "aws_instance" "terraform_ansible_server" {
   }
 
   provisioner "remote-exec" {
-    inline = ["sudo mkdir -p /home/ansible && sudo chown ubuntu: /home/ansible"]
+    inline = ["sudo mkdir -p /home/ansible_terraform && sudo chown ubuntu: /home/ansible_terraform"]
+  }
+
+  #copying the ip.txt file to the Ansible control node from local system
+  provisioner "file" {
+    source      = "./ip.txt"
+    destination = "/home/ansible_terraform/ip.txt"
+  }
+}
+
+#connecting to the Linux OS having the Ansible playbook
+resource "null_resource" "nullremote2" {
+  depends_on = [aws_volume_attachment.ebs_att]
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = tls_private_key.oskey.private_key_pem
+    host        = self.public_ip
   }
 
   provisioner "file" {
-    source      = "./ssm-agent-install.sh"
-    destination = "/home/ansible/ssm-agent-install.sh"
-  }
+  source      = "./ssm-agent-install.sh"
+  destination = "/home/ansible_terraform/ssm-agent-install.sh"
+}
 
-  provisioner "file" {
-    source      = "./ansible/inventory.yaml"
-    destination = "/home/ansible/inventory.yaml"
-  }
+provisioner "file" {
+  source      = "./ansible/install.sh"
+  destination = "/home/ansible_terraform/install.sh"
+}
 
-  provisioner "file" {
-    source      = "./ansible/templates/site.conf.j2.cfg"
-    destination = "/home/ansible/templates/site.conf.j2.cfg"
-  }
-
-  provisioner "file" {
-    source      = "./ansible/nginx.yaml"
-    destination = "/home/ansible/nginx.yaml"
-  }
-
-
-  provisioner "file" {
-    source      = "./ansible/site/index.html"
-    destination = "/home/ansible/site/index.html"
-  }
-  provisioner "file" {
-    source      = "./ansible/sync.yaml"
-    destination = "/home/ansible/sync.yaml"
-  }
-
-  provisioner "file" {
-    source      = "./ansible/install.sh"
-    destination = "/home/ansible/install.sh"
-  }
-
+  #command to run ansible playbook on remote Linux OS
   provisioner "remote-exec" {
+
     inline = [
-      "chmod +x /home/ssm-agent-install.sh",
-      "sudo /home/ssm-agent-install.sh",
-      "chmod +x /home/ansible/install.sh",
-      "sudo /home/ansible/install.sh"
+      "chmod +x /home/ansible_terraform/ssm-agent-install.sh",
+      "sudo /home/ansible_terraform/ssm-agent-install.sh",
+      "chmod +x /home/ansible_terraform/install.sh",
+      "sudo /home/ansible_terraform/install.sh"
     ]
   }
 }
@@ -169,3 +188,11 @@ resource "aws_security_group" "tfc_ansible_sg" {
   }
 }
 
+output "op1" {
+  value = aws_instance.terraform_ansible_server.public_ip
+}
+
+resource "local_file" "ip" {
+  content  = aws_instance.terraform_ansible_server.public_ip
+  filename = "ip.txt"
+}
