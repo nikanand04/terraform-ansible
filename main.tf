@@ -1,4 +1,3 @@
-#aws instance creation
 resource "tls_private_key" "oskey" {
   algorithm = "RSA"
 }

@@ -7,7 +7,7 @@ sleep 3;
 echo "ansible installed"
 
 echo "running playbook to install and configure NGINX"
-ansible-playbook -i inventory.yaml /home/nginx.yaml
+ansible-playbook -i /home/ansible/inventory.yaml /home/ansible/nginx.yaml
 
 echo "running playbook to sync the website files"
-ansible-playbook -i inventory.yml /home/sync.yaml
+ansible-playbook -i /home/ansible/inventory.yml /home/ansible/sync.yaml
