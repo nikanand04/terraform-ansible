@@ -3,7 +3,7 @@ resource "aws_instance" "terraform_ansible_server" {
   ami                    = var.ami_id
   instance_type          = var.instance_type
   availability_zone      = var.availability_zones
-  vpc_security_group_ids = [aws_security_group.webserver_sg.id]
+  vpc_security_group_ids = [aws_security_group.tfc_ansible_sg.id]
   subnet_id              = var.subnet_id
   iam_instance_profile   = aws_iam_instance_profile.iam-profile.name
   key_name               = "mykey1802"
@@ -86,9 +86,9 @@ resource "aws_iam_role_policy_attachment" "ssm-policy" {
 }
 
 
-resource "aws_security_group" "webserver_sg" {
-  name        = "web-server-security-group"
-  description = "Security Group for web server"
+resource "aws_security_group" "tfc_ansible_sg" {
+  name        = "terraform-ansible-security-group"
+  description = "Security Group for terraform-ansible server"
   vpc_id      = var.vpc_id
 
   ingress {
