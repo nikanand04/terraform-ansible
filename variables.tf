@@ -43,7 +43,3 @@ variable "region" {
   description = "Region in which the resource will be launched"
    default    = "ap-southeast-1"
 }
-
-variable "security_group" {
-   default    = ["sg-0a32ca11bc54b3703"]
-}

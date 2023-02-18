@@ -3,7 +3,7 @@ resource "aws_instance" "terraform_ansible_server" {
   ami                    = var.ami_id
   instance_type          = var.instance_type
   availability_zone      = var.availability_zones
-  vpc_security_group_ids = var.security_group
+  vpc_security_group_ids = [aws_security_group.webserver_sg.id]
   subnet_id              = var.subnet_id
   iam_instance_profile   = aws_iam_instance_profile.iam-profile.name
   key_name               = "mykey1802"
@@ -86,3 +86,30 @@ resource "aws_iam_role_policy_attachment" "ssm-policy" {
 }
 
 
+resource "aws_security_group" "webserver_sg" {
+  name        = "web-server-security-group"
+  description = "Security Group for web server"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description      = "inbound"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
+  
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name        = "${var.environment}-web-server-security-group"
+    Owner       = var.owner
+    Purpose     = var.purpose
+    Environment = "${var.environment}"
+  }
+}
