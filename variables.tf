@@ -44,7 +44,18 @@ variable "region" {
    default    = "ap-southeast-1"
 }
 
-variable "user_password" {
-   default    = "tfcansible"
+variable "hcp_bucket" {
+  description = "HCP Packer bucket name"
+  default = "app1-ubuntu"
+}
+
+variable "hcp_channel" {
+  description = "HCP Packer channel name"
+  default = "staging"
+}
+
+variable "version" {
+  type    = string
+  default = "1.0.0"
 }
 
