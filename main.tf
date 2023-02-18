@@ -53,7 +53,7 @@ resource "aws_instance" "terraform_ansible_server" {
 }
 
 resource "aws_iam_instance_profile" "iam-profile" {
-  name = "ec2_profile"
+  name = "ec2_tfc_ansible_profile"
   role = aws_iam_role.iam-role.name
 }
 
