@@ -17,7 +17,6 @@ resource "aws_instance" "terraform_ansible_server" {
 
   root_block_device {
     delete_on_termination = true
-    volume_size           = 8
     tags = {
       Name        = "${var.environment}-terraform_ansible_ebs"
       Owner       = var.owner
