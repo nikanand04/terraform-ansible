@@ -58,7 +58,7 @@ resource "aws_iam_instance_profile" "iam-profile" {
 }
 
 resource "aws_iam_role" "iam-role" {
-  name        = "dev-ssm-role"
+  name        = "terraform-ansible-ssm-role"
   description = "The role for the developer resources EC2"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
