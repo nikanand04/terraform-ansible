@@ -12,10 +12,6 @@ resource "aws_key_pair" "my_key" {
   public_key = tls_private_key.oskey.public_key_openssh
 }
 
-data "template_file" "startup" {
- template = file("ssm-agent-installer.sh")
-}
-
 data "hcp_packer_iteration" "ubuntu" {
   bucket_name = var.hcp_bucket
   channel     = var.hcp_channel
@@ -36,7 +32,6 @@ resource "aws_instance" "terraform_ansible_server" {
   subnet_id              = var.subnet_id
   iam_instance_profile   = aws_iam_instance_profile.iam-profile.name
   key_name               = aws_key_pair.my_key.key_name
-  user_data              = data.template_file.startup.rendered
 
   tags = {
     Name        = "${var.environment}-terraform_ansible_server"
@@ -64,6 +59,11 @@ resource "aws_instance" "terraform_ansible_server" {
 
   provisioner "remote-exec" {
     inline = ["sudo mkdir -p /home/ansible && sudo chown ubuntu: /home/ansible"]
+  }
+
+  provisioner "file" {
+    source      = "./ssm-agent-install.sh"
+    destination = "/home/ssm-agent-install.sh"
   }
 
   provisioner "file" {
@@ -98,6 +98,8 @@ resource "aws_instance" "terraform_ansible_server" {
 
   provisioner "remote-exec" {
     inline = [
+      "chmod +x /home/ssm-agent-install.sh",
+      "sudo /home/ssm-agent-install.sh",
       "chmod +x /home/ansible/install.sh",
       "sudo /home/ansible/install.sh"
     ]
