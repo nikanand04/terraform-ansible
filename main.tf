@@ -6,6 +6,7 @@ resource "aws_instance" "terraform_ansible_server" {
   vpc_security_group_ids = [aws_security_group.tfc_ansible_sg.id]
   subnet_id              = var.subnet_id
   iam_instance_profile   = aws_iam_instance_profile.iam-profile.name
+  key_name               = "deployer-key"
 
   tags = {
     Name        = "${var.environment}-terraform_ansible_server"
@@ -131,4 +132,9 @@ resource "aws_security_group" "tfc_ansible_sg" {
     Purpose     = var.purpose
     Environment = "${var.environment}"
   }
+}
+
+resource "aws_key_pair" "deployer" {
+  key_name   = "deployer-key"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDDOGMh6Yjw7peHcKVuU4mw03E/f+yIOhzcclmG+DpdHbB+whewXl6XlvH/fAtlvC0cDVPLH9ggbV0itpanFffmi0LDuWOuQ5/fJK0E/Zzgb1IsJf/w5pjkepeg3CXPMiE6uIq7P1uekrmNwRLX9pI+TTsqrXeb1tF4SZ6hLZjoMOa48tbfBtr3os1S5bR+uRdQJA+qMY4sylEDWrwJDBJs+b0GpH1T9eoVbE048xQurolcHqfIWuR3OjKPnEmzG6CnPgzgrnydpouDWqf1HeGEIcig8W1yZxl13Uv/1x4p6ILBQJvOFBJLKd56LvCE+NCaiPPwGXiZZg9r5ixTUFOpzHyR6pGH5DT17nMfCxhI7Ce515dIFXIOfpds9FlDqJ8JIq8vNwQNW3fZv7CgMVM2deNlzA+iWEfWQZz2pxtGbY0jMsYhOA2FME21z3tgS0M8zYXtqCi1nr3eMGL+7+/QyJOuurFx4+hlHVE1J4sALR6Gn85LfRVLQOu7U+M8rA1yelfZQDz3/2EGZMR2FjjmfdjmlX8tl/ilN7+PRXCMi8PNHe9iGSQGY8n2zYuHYT3fqbGX4z3bqWPgX0qMcSClzF+fbIbBHtjhzJjJH0vgUdqKHn8adNKKscgCezpLPMl+tHhKL6TLNkeTt2sutv3kL0/HR2Zu62Pm/4mK4XRlxQ== zhihao.pang@zhihao.pang-X1R93MXMGV"
 }
