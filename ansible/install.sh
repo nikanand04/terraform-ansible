@@ -1,8 +1,8 @@
 #!/bin/bash
 
-sudo yum update -y && sleep 5;
+sudo apt update -y && sleep 5;
 
-sudo amazon-linux-extras install ansible2 -y;
+sudo apt install -y ansible;
 sleep 3;
 echo "ansible installed"
 
