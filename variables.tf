@@ -46,7 +46,7 @@ variable "region" {
 
 variable "hcp_bucket" {
   description = "HCP Packer bucket name"
-  default = "app1-ubuntu"
+  default = "app1-amz-linux"
 }
 
 variable "hcp_channel" {
