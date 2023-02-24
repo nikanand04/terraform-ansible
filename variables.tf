@@ -20,7 +20,7 @@ variable "environment" {
 
 variable "owner" {
   description = "Owner of resource"
-  default     = "zhihao.pang@hashicorp.com"
+  default     = "nikita@hashicorp.com"
 }
 
 variable "purpose" {
@@ -46,7 +46,7 @@ variable "region" {
 
 variable "hcp_bucket" {
   description = "HCP Packer bucket name"
-  default = "app1-amz-linux"
+  default = "learn-packer-ubuntu"
 }
 
 variable "hcp_channel" {
